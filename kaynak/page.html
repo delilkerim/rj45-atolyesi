@@ -1,0 +1,218 @@
+<title>RJ-45 Çakma Atölyesi</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+/* Atölye tezgâhı: solda kesme matı üzerinde simülasyon, sağda iş föyü gibi adım paneli */
+:root{
+  --bg:#e6ecee; --surface:#fbfcfc; --surface-2:#f1f5f6; --ink:#13212b; --muted:#566771; --line:#cfd9dd;
+  --accent:#2f6db5; --accent-ink:#ffffff; --accent-soft:#dce8f6;
+  --ok:#1d7544; --ok-soft:#dcefe3; --warn:#9a5d06; --warn-soft:#f7ead2; --err:#ad321e; --err-soft:#f6ddd8;
+  --mat:#2a5649;
+  --f-display:"Barlow Semi Condensed","Arial Narrow",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f171b; --surface:#172228; --surface-2:#1d2a31; --ink:#e3ecef; --muted:#93a5ae; --line:#2b3b43;
+  --accent:#71a8ea; --accent-ink:#0b1620; --accent-soft:#1d3247;
+  --ok:#5cc98a; --ok-soft:#173527; --warn:#e2a64a; --warn-soft:#3a2c14; --err:#f08a76; --err-soft:#3d1f1a;
+  --mat:#21463b; color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#0f171b; --surface:#172228; --surface-2:#1d2a31; --ink:#e3ecef; --muted:#93a5ae; --line:#2b3b43;
+  --accent:#71a8ea; --accent-ink:#0b1620; --accent-soft:#1d3247;
+  --ok:#5cc98a; --ok-soft:#173527; --warn:#e2a64a; --warn-soft:#3a2c14; --err:#f08a76; --err-soft:#3d1f1a;
+  --mat:#21463b; color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5;margin:0;-webkit-tap-highlight-color:transparent}
+.wrap{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:12px 24px;max-width:1500px;margin:0 auto}
+h1,h2,h3{font-family:var(--f-display);font-weight:700;letter-spacing:.01em;text-wrap:balance;margin:0}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.top{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding-block:6px 12px}
+.brand{display:flex;align-items:center;gap:10px;min-width:0;flex:1 1 260px}
+.brand svg{flex:none}
+.brand b{font-family:var(--f-display);font-size:24px;line-height:1;display:block}
+.brand span{color:var(--muted);font-size:13px}
+.who{font-family:var(--f-mono);font-size:13px;color:var(--muted);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.who .chip{background:var(--surface);border:1px solid var(--line);padding:3px 10px;border-radius:99px;color:var(--ink)}
+.tools{display:flex;gap:6px;flex-wrap:wrap}
+.btn{appearance:none;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:9px 14px;border-radius:8px;cursor:pointer;font-weight:600;font-size:14px;line-height:1.2;display:inline-flex;align-items:center;gap:8px;justify-content:center;min-height:42px}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.primary:hover{filter:brightness(1.07)}
+.btn.ghost{background:transparent}
+.btn.small{padding:6px 10px;min-height:34px;font-size:13px}
+.btn[disabled]{opacity:.45;cursor:not-allowed;filter:none}
+.btn[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent)}
+.btn.danger{color:var(--err);border-color:var(--err)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r)}
+.muted{color:var(--muted)}
+.mono{font-family:var(--f-mono)}
+/* Giriş */
+.login{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:20px;align-items:start}
+.hero{background:var(--mat);color:#eef6f1;border-radius:14px;padding:28px;position:relative;overflow:hidden;min-height:340px;display:flex;flex-direction:column;justify-content:flex-end}
+.hero canvas{position:absolute;inset:0;width:100%;height:100%}
+.hero .txt{position:relative;max-width:min(30ch,56%)}
+.hero h1{font-size:clamp(28px,3.3vw,44px);line-height:1;margin-bottom:10px}
+.hero p{margin:0;color:#cfe3d8}
+.form{padding:22px;display:grid;gap:14px}
+.form h2{font-size:24px}
+.field{display:grid;gap:5px}
+.field label{font-weight:600;font-size:14px}
+.field input,.field select,.field textarea{border:1px solid var(--line);background:var(--surface-2);border-radius:8px;padding:10px 12px;min-height:44px;width:100%}
+.field textarea{min-height:96px;resize:vertical}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.row>*{flex:1 1 140px;min-width:0}
+.taskbox{border:1px dashed var(--line);border-radius:8px;padding:12px;background:var(--surface-2);font-size:14px}
+.taskbox b{font-family:var(--f-display);font-size:18px}
+.err-msg{color:var(--err);font-size:14px;min-height:1.2em}
+/* Laboratuvar */
+.lab{display:grid;grid-template-columns:minmax(0,1fr) clamp(290px,30vw,370px);gap:14px;align-items:start}
+.stagewrap{position:relative;background:var(--mat);border-radius:14px;overflow:hidden;display:flex;justify-content:center;align-items:center;min-width:0;box-shadow:inset 0 0 0 1px rgba(0,0,0,.2)}
+#stage{display:block;touch-action:none;cursor:grab}
+.timer{position:absolute;left:12px;top:10px;background:rgba(10,20,26,.78);color:#fff;font-family:var(--f-mono);padding:4px 10px;border-radius:99px;font-size:14px}
+.rotate{position:absolute;inset:auto 10px 10px 10px;background:rgba(10,20,26,.85);color:#fff;font-size:13px;padding:8px 12px;border-radius:8px;display:none}
+@media (orientation:portrait) and (max-width:700px){.rotate{display:block}}
+.panel{display:grid;gap:12px;min-width:0}
+.steps{display:flex;flex-wrap:wrap;gap:4px;padding:10px}
+.steps .s{font-family:var(--f-mono);font-size:12px;padding:4px 7px;border-radius:6px;background:var(--surface-2);color:var(--muted);border:1px solid transparent}
+.steps .s.now{background:var(--accent);color:var(--accent-ink)}
+.steps .s.done{color:var(--ok);border-color:var(--ok-soft);background:var(--ok-soft)}
+.steps .end{font-family:var(--f-display);font-weight:700;font-size:14px;width:100%;margin-top:2px}
+.step{padding:16px;display:grid;gap:10px}
+.step .eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.step h2{font-size:26px;line-height:1.05}
+.step p{margin:0}
+.step ol,.step ul{margin:0;padding-left:20px}
+.status{border-radius:8px;padding:10px 12px;font-size:14px;background:var(--surface-2)}
+.status.ok{background:var(--ok-soft);color:var(--ok)}
+.status.warn{background:var(--warn-soft);color:var(--warn)}
+.status.err{background:var(--err-soft);color:var(--err)}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.actions .btn{flex:1 1 auto}
+.colorcard{padding:12px 14px}
+.colorcard h3{font-size:16px;margin-bottom:6px;display:flex;justify-content:space-between;gap:8px}
+.seq{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:3px}
+.seq .w{border-radius:4px;height:46px;position:relative;border:1px solid rgba(0,0,0,.18);overflow:hidden}
+.seq .w span{position:absolute;bottom:2px;left:0;right:0;text-align:center;font-family:var(--f-mono);font-size:11px;font-weight:700;color:#111;background:rgba(255,255,255,.75)}
+.seq .cap{grid-column:span 8;font-size:12px;color:var(--muted);display:flex;justify-content:space-between}
+.qs{display:grid;gap:10px}
+.q{border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+.q .qt{font-weight:600;margin-bottom:6px}
+.opts{display:flex;flex-wrap:wrap;gap:6px}
+.opt{display:inline-flex;gap:6px;align-items:center;border:1px solid var(--line);border-radius:99px;padding:6px 12px;cursor:pointer;background:var(--surface-2);font-size:14px;min-height:38px}
+.opt input{accent-color:var(--accent);width:18px;height:18px;margin:0}
+.opt:has(input:checked){border-color:var(--accent);background:var(--accent-soft)}
+.fb{border-left:4px solid var(--accent);padding:10px 12px;background:var(--surface-2);border-radius:0 8px 8px 0;font-size:14px}
+.fb.ok{border-color:var(--ok)}.fb.err{border-color:var(--err)}.fb.warn{border-color:var(--warn)}
+.fb h4{margin:0 0 4px;font-family:var(--f-display);font-size:17px}
+.tag{display:inline-block;font-family:var(--f-mono);font-size:11px;padding:2px 7px;border-radius:99px;background:var(--surface-2);border:1px solid var(--line);color:var(--muted)}
+/* Sonuç */
+.result{display:grid;grid-template-columns:minmax(0,320px) minmax(0,1fr);gap:16px;align-items:start}
+.scorebox{padding:22px;display:grid;gap:8px;justify-items:start}
+.big{font-family:var(--f-display);font-size:88px;line-height:.9;font-weight:700}
+.big small{font-size:30px;color:var(--muted)}
+.parts{width:100%;border-collapse:collapse;font-size:14px}
+.parts td{padding:7px 4px;border-bottom:1px solid var(--line);vertical-align:top}
+.parts td.n{text-align:right;font-family:var(--f-mono);white-space:nowrap}
+.bar{height:6px;background:var(--surface-2);border-radius:99px;overflow:hidden;margin-top:4px}
+.bar i{display:block;height:100%;background:var(--accent)}
+.list{margin:0;padding-left:20px;display:grid;gap:4px}
+.codebox{font-family:var(--f-mono);font-size:12px;word-break:break-all;background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:10px;max-height:120px;overflow:auto;user-select:all}
+/* Öğretmen */
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.tabs .btn[aria-selected="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
+table.res{border-collapse:collapse;width:100%;font-size:14px;min-width:720px}
+table.res th,table.res td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+table.res th{font-family:var(--f-display);font-size:15px;background:var(--surface-2);position:sticky;top:0;cursor:pointer}
+table.res td.n{font-family:var(--f-mono);text-align:right;font-variant-numeric:tabular-nums}
+table.res tr:hover td{background:var(--accent-soft)}
+.pill{display:inline-block;padding:2px 9px;border-radius:99px;font-size:12px;font-weight:600}
+.pill.ok{background:var(--ok-soft);color:var(--ok)}.pill.warn{background:var(--warn-soft);color:var(--warn)}.pill.err{background:var(--err-soft);color:var(--err)}
+.stats{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.stat{padding:10px 14px;min-width:120px}
+.stat b{display:block;font-family:var(--f-display);font-size:30px;line-height:1}
+.stat span{font-size:12px;color:var(--muted)}
+/* Modal */
+.modal{position:fixed;inset:0;background:rgba(5,12,16,.55);display:flex;align-items:center;justify-content:center;padding:16px;z-index:50}
+.modal .box{max-width:560px;width:100%;padding:20px;display:grid;gap:12px;max-height:90vh;overflow:auto}
+.toast{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--surface);padding:10px 16px;border-radius:8px;font-size:14px;z-index:60;max-width:calc(100% - 32px)}
+@media (max-width:1060px){.result{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:860px){.lab{grid-template-columns:minmax(0,1fr)}#stepCard{order:1}#colorCard{order:2}#steps{order:3}.step h2{font-size:22px}}
+@media (max-width:820px){.login{grid-template-columns:minmax(0,1fr)}.hero{min-height:220px}.hero canvas{opacity:.35}.hero .txt{max-width:none}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true"><rect x="7" y="4" width="26" height="26" rx="3" fill="none" stroke="currentColor" stroke-width="2.4"/><g fill="#d6a63a"><rect x="10" y="7" width="2" height="8"/><rect x="13.1" y="7" width="2" height="8"/><rect x="16.2" y="7" width="2" height="8"/><rect x="19.3" y="7" width="2" height="8"/><rect x="22.4" y="7" width="2" height="8"/><rect x="25.5" y="7" width="2" height="8"/><rect x="28.6" y="7" width="2" height="8"/></g><rect x="14" y="30" width="12" height="7" rx="1.5" fill="#2f6db5"/></svg>
+      <div><b>RJ-45 Çakma Atölyesi</b><span>Ağ Temelleri · Cat6 kablo hazırlama ve test deneyi</span></div>
+    </div>
+    <div class="who" id="who"></div>
+    <div class="tools">
+      <button class="btn small ghost" id="btnLabels" aria-pressed="false" title="Tellerin üzerinde renk adlarını göster">Renk adları</button>
+      <button class="btn small ghost" id="btnSound" aria-pressed="true">Ses açık</button>
+      <button class="btn small" id="btnTeacher">Öğretmen</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- GİRİŞ -->
+    <section id="scrLogin">
+      <div class="login">
+        <div class="hero">
+          <canvas id="heroCv" aria-hidden="true"></canvas>
+          <div class="txt">
+            <h1>Kabloyu sen hazırla, test cihazı karar versin.</h1>
+            <p>Kılıfı soy, renkleri diz, konnektörü tak, penseyle çak. Sonra test cihazına bağla ve gördüğün sonucu yorumla.</p>
+          </div>
+        </div>
+        <form class="card form" id="loginForm" novalidate>
+          <h2>Deneye başla</h2>
+          <div class="field"><label for="inAd">Ad Soyad</label><input id="inAd" autocomplete="name" required placeholder="Örn. Elif Yılmaz"></div>
+          <div class="row">
+            <div class="field"><label for="inNo">Okul no</label><input id="inNo" inputmode="numeric" required placeholder="Örn. 1234"></div>
+            <div class="field"><label for="inSinif">Sınıf / şube</label><input id="inSinif" required placeholder="Örn. 10-A"></div>
+          </div>
+          <div class="taskbox" id="taskPreview"></div>
+          <div class="err-msg" id="loginErr" role="alert"></div>
+          <button class="btn primary" type="submit" id="btnStart">Atölyeye gir</button>
+          <p class="muted" style="margin:0;font-size:13px" id="connInfo"></p>
+        </form>
+      </div>
+    </section>
+
+    <!-- ATÖLYE -->
+    <section id="scrLab" hidden>
+      <div class="lab">
+        <div class="stagewrap">
+          <canvas id="stage" tabindex="0" aria-label="Simülasyon tezgâhı. Araçları sürükleyerek kullanın."></canvas>
+          <div class="timer" id="timer" hidden></div>
+          <div class="rotate">Daha rahat çalışmak için cihazını yan çevir.</div>
+        </div>
+        <aside class="panel">
+          <div class="card steps" id="steps"></div>
+          <div class="card step" id="stepCard"></div>
+          <div class="card colorcard" id="colorCard" hidden></div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- SONUÇ -->
+    <section id="scrResult" hidden></section>
+
+    <!-- ÖĞRETMEN -->
+    <section id="scrTeacher" hidden></section>
+  </main>
+</div>
+<div class="modal" id="modal" hidden><div class="card box" id="modalBox" role="dialog" aria-modal="true"></div></div>
+<div class="toast" id="toast" hidden></div>
